@@ -1,0 +1,105 @@
+{
+  "sensorMappings": {
+    "pump_001_temp": {
+      "objectId": "pump_001",
+      "property": "color",
+      "transform": {
+        "type": "color",
+        "ranges": [
+          { "min": 0, "max": 60, "color": "#10b981" },
+          { "min": 60, "max": 80, "color": "#f59e0b" },
+          { "min": 80, "max": 100, "color": "#ef4444" }
+        ]
+      }
+    },
+    "pump_001_vibration": {
+      "objectId": "pump_001",
+      "property": "animation",
+      "transform": {
+        "type": "scale",
+        "factor": 0.01
+      }
+    },
+    "vessel_001_pressure": {
+      "objectId": "vessel_001",
+      "property": "scale",
+      "transform": {
+        "type": "scale",
+        "factor": 0.01
+      }
+    },
+    "vessel_001_temp": {
+      "objectId": "vessel_001",
+      "property": "color",
+      "transform": {
+        "type": "color",
+        "ranges": [
+          { "min": 0, "max": 70, "color": "#10b981" },
+          { "min": 70, "max": 85, "color": "#f59e0b" },
+          { "min": 85, "max": 120, "color": "#ef4444" }
+        ]
+      }
+    },
+    "flow_001_rate": {
+      "objectId": "flow_001",
+      "property": "rotation",
+      "transform": {
+        "type": "scale",
+        "factor": 0.1
+      }
+    },
+    "flow_001_temp": {
+      "objectId": "flow_001",
+      "property": "color",
+      "transform": {
+        "type": "color",
+        "ranges": [
+          { "min": 0, "max": 50, "color": "#10b981" },
+          { "min": 50, "max": 75, "color": "#f59e0b" },
+          { "min": 75, "max": 100, "color": "#ef4444" }
+        ]
+      }
+    }
+  },
+  "deviceTypes": {
+    "pump": {
+      "sensors": ["temperature", "vibration", "pressure"],
+      "thresholds": {
+        "temperature": { "warning": 75, "critical": 90 },
+        "vibration": { "warning": 5, "critical": 8 },
+        "pressure": { "warning": 80, "critical": 95 }
+      }
+    },
+    "vessel": {
+      "sensors": ["pressure", "temperature", "level"],
+      "thresholds": {
+        "pressure": { "warning": 80, "critical": 95 },
+        "temperature": { "warning": 85, "critical": 100 },
+        "level": { "warning": 90, "critical": 95 }
+      }
+    },
+    "flow_meter": {
+      "sensors": ["flow", "temperature", "pressure"],
+      "thresholds": {
+        "flow": { "warning": 20, "critical": 10 },
+        "temperature": { "warning": 75, "critical": 90 },
+        "pressure": { "warning": 80, "critical": 95 }
+      }
+    }
+  },
+  "scadaConfig": {
+    "updateInterval": 1000,
+    "retryAttempts": 3,
+    "timeoutMs": 5000,
+    "protocols": {
+      "websocket": {
+        "url": "ws://localhost:8080",
+        "reconnectInterval": 5000
+      },
+      "mqtt": {
+        "broker": "mqtt://localhost:1883",
+        "topics": ["sensors/+/data", "devices/+/status"]
+      }
+    }
+  }
+}
