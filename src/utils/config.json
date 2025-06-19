@@ -93,7 +93,7 @@
     "timeoutMs": 5000,
     "protocols": {
       "websocket": {
-        "url": "ws://localhost:8080",
+        "url": "https://digital-twin-bolt.onrender.com",
         "reconnectInterval": 5000
       },
       "mqtt": {
