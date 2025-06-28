@@ -3,3 +3,4 @@ numpy
 fastapi
 pydantic
 scikit-learn
+pathlib
