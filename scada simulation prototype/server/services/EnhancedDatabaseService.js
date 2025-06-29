@@ -4,9 +4,13 @@ import { LoggingService } from './LoggingService.js';
 export class EnhancedDatabaseService {
   constructor() {
     this.logger = new LoggingService();
+    // this.supabase = createClient(
+    //   process.env.VITE_SUPABASE_URL,
+    //   process.env.VITE_SUPABASE_ANON_KEY
+    // );
     this.supabase = createClient(
-      process.env.VITE_SUPABASE_URL,
-      process.env.VITE_SUPABASE_ANON_KEY
+      "https://rwomicmqqlpvbdgegcab.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ3b21pY21xcWxwdmJkZ2VnY2FiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAzMDQ4MjQsImV4cCI6MjA2NTg4MDgyNH0.rSI-uCFtCCr-ctWS71kUJqcNXqwiM5VljvJK9uQFyuI"
     );
     this.tenantContext = null;
   }
@@ -36,7 +40,7 @@ export class EnhancedDatabaseService {
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
       )`,
-      
+
       `CREATE TABLE IF NOT EXISTS digital_twins (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
@@ -51,7 +55,7 @@ export class EnhancedDatabaseService {
         created_at TIMESTAMP DEFAULT NOW(),
         updated_at TIMESTAMP DEFAULT NOW()
       )`,
-      
+
       `CREATE TABLE IF NOT EXISTS sensors (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         digital_twin_id UUID REFERENCES digital_twins(id) ON DELETE CASCADE,
@@ -63,7 +67,7 @@ export class EnhancedDatabaseService {
         unit TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       )`,
-      
+
       `CREATE TABLE IF NOT EXISTS sensor_data (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         sensor_id UUID REFERENCES sensors(id) ON DELETE CASCADE,
@@ -117,7 +121,7 @@ export class EnhancedDatabaseService {
 
   async storeSensorData(digitalTwinId, sensorData) {
     const records = [];
-    
+
     // Convert your existing sensor data format to individual sensor records
     Object.entries(sensorData).forEach(([category, data]) => {
       if (category !== 'timestamp') {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TwinBuilder } from './components/builder/TwinBuilder';
-import { TwinMonitor } from './components/monitor/TwinMonitor';
 import { TenantOverview } from './components/overview/TenantOverview';
 import { GlobalNavigation } from './components/navigation/GlobalNavigation';
 import { EnhancedWebSocketService } from './services/EnhancedWebSocketService';
+import { TwinMonitor } from './components/monitor/TwinMonitor';
 
 // Context for tenant and twin management
 const PlatformContext = createContext();
@@ -55,20 +55,19 @@ function App() {
   useEffect(() => {
     const initializePlatform = async () => {
       try {
-        // Load user's tenant (this would come from authentication)
         const tenant = { id: 'tenant-1', name: 'Demo Company' };
         setCurrentTenant(tenant);
-        
-        // Load twins for this tenant
-        const response = await fetch(`/api/tenants/${tenant.id}/twins`);
-        const twinsData = await response.json();
+
+        // MOCKED twins data
+        const twinsData = [
+          { id: 'twin-1', name: 'Pump 1', type: 'pump', description: 'Main pump', config: {}, modelUrl: '' }
+        ];
         setTwins(twinsData);
-        
-        // Set first twin as selected if available
+
         if (twinsData.length > 0) {
           setSelectedTwin(twinsData[0]);
         }
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error('Failed to initialize platform:', error);
@@ -101,13 +100,8 @@ function App() {
 
   const handleTwinCreate = async (twinConfig) => {
     try {
-      const response = await fetch(`/api/tenants/${currentTenant.id}/twins`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(twinConfig)
-      });
-      
-      const newTwin = await response.json();
+      // MOCKED create twin
+      const newTwin = { ...twinConfig, id: `twin-${Date.now()}` };
       setTwins(prev => [...prev, newTwin]);
       setSelectedTwin(newTwin);
       setCurrentView('monitor');
@@ -179,7 +173,7 @@ function App() {
               transition={{ duration: 0.4 }}
               className="h-screen"
             >
-              <TwinMonitor 
+              <TwinMonitor
                 digitalTwin={selectedTwin}
                 realTimeData={twinData[selectedTwin.id]}
                 tenant={currentTenant}

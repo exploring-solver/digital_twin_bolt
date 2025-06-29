@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { TemplateSelector } from './TemplateSelector';
 import { ConfigurationPanel } from './ConfigurationPanel';
 import { ModelUploader } from './ModelUploader';
+import { ReviewPanel } from './ReviewPanel';
 
 export const TwinBuilder = ({ tenant, onTwinCreate, onCancel }) => {
   const [currentStep, setCurrentStep] = useState(1);
