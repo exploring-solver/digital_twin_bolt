@@ -1,0 +1,7 @@
+pandas
+numpy
+fastapi
+pydantic
+scikit-learn
+pathlib
+gradio
