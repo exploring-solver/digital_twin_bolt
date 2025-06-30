@@ -2,3 +2,4 @@ node_modules/
 .env
 .bolt
 ML_Shit/.venv
+ML_Shit/SKJ/__pycache__

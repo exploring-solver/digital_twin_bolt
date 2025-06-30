@@ -5,3 +5,10 @@ pydantic
 scikit-learn
 pathlib
 gradio
+matplotlib
+seaborn
+tensorflow>=2.8.0
+
+# for  NixOs
+# nix-shell -p gcc
+# run this command befour running ML_Shit/SKJ/LSTM_Autoencoder_Engine_Anomaly_Detection_System.py
