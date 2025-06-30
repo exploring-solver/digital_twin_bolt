@@ -1,13 +1,13 @@
 import ModbusRTU from 'modbus-serial';
 import { LoggingService } from './LoggingService.js';
-import { ControlSensors } from './sensors/ControlSensors.js';
-import { EnvironmentSensors } from './sensors/EnvironmentSensors.js';
-import { LiftingSensors } from './sensors/LiftingSensors.js';
-import { MotorSensors } from './sensors/MotorSensors.js';
-import { MovementSensors } from './sensors/MovementSensors.js';
-import { PowerSensors } from './sensors/PowerSensors.js';
-import { SafetySensors } from './sensors/SafetySensors.js';
-import { StructureSensors } from './sensors/StructureSensors.js';
+import { ControlSensors } from '../../server/services/sensors/ControlSensors.js';
+import { EnvironmentSensors } from '../../server/services/sensors/EnvironmentSensors.js';
+import { LiftingSensors } from '../../server/services/sensors/LiftingSensors.js';
+import { MotorSensors } from '../../server/services/sensors/MotorSensors.js';
+import { MovementSensors } from '../../server/services/sensors/MovementSensors.js';
+import { PowerSensors } from '../../server/services/sensors/PowerSensors.js';
+import { SafetySensors } from '../../server/services/sensors/SafetySensors.js';
+import { StructureSensors } from '../../server/services/sensors/StructureSensors.js';
 
 export class ModbusService {
   constructor() {

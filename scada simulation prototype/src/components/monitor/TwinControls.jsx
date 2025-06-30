@@ -74,7 +74,7 @@ export const TwinControls = ({ digitalTwin, realTimeData }) => {
     
     // In a real implementation, this would send commands to the actual twin
     try {
-      const response = await fetch(`/api/twins/${digitalTwin.id}/operations`, {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}/operations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

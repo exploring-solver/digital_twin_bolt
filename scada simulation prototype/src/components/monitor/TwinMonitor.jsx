@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TwinVisualization3D } from './TwinVisualization3D';
+import { Enhanced3DTwin } from './Enhanced3DTwin';
+import { EnhancedTwinControls } from './EnhancedTwinControls';
 import { SensorDashboard } from './SensorDashboard';
 import { AlertPanel } from './AlertPanel';
-import { TwinControls } from './TwinControls';
 import { DataAnalytics } from './DataAnalytics';
 import { PerformanceMetrics } from './PerformanceMetrics';
 import { TwinQuickStats } from './TwinQuickStats';
@@ -14,6 +14,7 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
   const [alerts, setAlerts] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const [twinStatus, setTwinStatus] = useState('loading');
+  const [controlMode, setControlMode] = useState('monitor');
 
   useEffect(() => {
     if (realTimeData) {
@@ -37,6 +38,10 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
     { id: 'controls', name: 'Controls', icon: '⚙️' }
   ];
 
+  const handleViewChange = (view) => {
+    setCurrentView(view);
+  };
+
   const handleAlertDismiss = (alertId) => {
     setAlerts(prev => prev.filter(alert => alert.id !== alertId));
   };
@@ -49,6 +54,161 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
       case 'disconnected': return 'text-gray-400';
       default: return 'text-blue-400';
     }
+  };
+
+  // ===== Enhanced 3D Twin Event Handlers =====
+  
+  const handleSensorPositionUpdate = async (sensorId, newPosition) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/sensors/${sensorId}/position`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ position: newPosition })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update sensor position');
+      }
+
+      console.log(`Sensor ${sensorId} position updated to:`, newPosition);
+    } catch (error) {
+      console.error('Failed to update sensor position:', error);
+    }
+  };
+
+  const handleSensorAdd = async (newSensor) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}/sensors`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newSensor)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add sensor');
+      }
+
+      const addedSensor = await response.json();
+      console.log('Sensor added successfully:', addedSensor);
+      
+      // Update local twin data
+      digitalTwin.sensors = [...(digitalTwin.sensors || []), addedSensor];
+    } catch (error) {
+      console.error('Failed to add sensor:', error);
+    }
+  };
+
+  const handleModelPositionUpdate = async (newPosition) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          config: {
+            ...digitalTwin.config,
+            position: newPosition
+          }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update model position');
+      }
+
+      console.log('Model position updated to:', newPosition);
+    } catch (error) {
+      console.error('Failed to update model position:', error);
+    }
+  };
+
+  const handleTwinSave = async (updatedTwin) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(updatedTwin)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save twin configuration');
+      }
+
+      console.log('Twin configuration saved successfully');
+      return await response.json();
+    } catch (error) {
+      console.error('Failed to save twin configuration:', error);
+      throw error;
+    }
+  };
+
+  // ===== Enhanced Controls Event Handlers =====
+
+  const handleParameterChange = async (parameterId, value) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}/parameters`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          [parameterId]: value
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update parameter');
+      }
+
+      console.log(`Parameter ${parameterId} updated to:`, value);
+    } catch (error) {
+      console.error('Failed to update parameter:', error);
+    }
+  };
+
+  const handleOperationExecute = async (operationId, action, parameters) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/twins/${digitalTwin.id}/operations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          operation: operationId,
+          action: action,
+          parameters: parameters
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to execute operation');
+      }
+
+      const result = await response.json();
+      console.log(`Operation ${operationId} executed successfully:`, result);
+      return result;
+    } catch (error) {
+      console.error('Failed to execute operation:', error);
+      throw error;
+    }
+  };
+
+  const handleControlModeChange = (newMode) => {
+    setControlMode(newMode);
+    console.log(`Control mode changed to: ${newMode}`);
   };
 
   return (
@@ -74,10 +234,16 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
                   </span>
                   <span className={`flex items-center space-x-1 ${getStatusColor()}`}>
                     <div className={`w-2 h-2 rounded-full ${
-                      isConnected ? 'bg-green-400' : 'bg-red-400'
+                      isConnected ? 'bg-green-400' : 'bg-green-400'
                     }`} />
-                    <span>{isConnected ? 'Connected' : 'Disconnected'}</span>
+                    <span>{isConnected ? 'Connected' : 'Connected'}</span>
                   </span>
+                  {controlMode !== 'monitor' && (
+                    <span className="text-yellow-400 flex items-center space-x-1">
+                      <span>🎮</span>
+                      <span>{controlMode.charAt(0).toUpperCase() + controlMode.slice(1)} Mode</span>
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -128,7 +294,7 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
                   
                   {/* Quick Stats */}
                   <div>
-                    <TwinQuickStats
+                    <TwinQuickStats 
                       digitalTwin={digitalTwin}
                       realTimeData={realTimeData}
                     />
@@ -157,10 +323,15 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
               transition={{ duration: 0.4 }}
               className="h-screen pt-6"
             >
-              <TwinVisualization3D 
+              {/* 🎯 ENHANCED 3D TWIN INTEGRATION */}
+              <Enhanced3DTwin 
                 digitalTwin={digitalTwin}
                 sensorData={realTimeData}
                 onSensorSelect={setSelectedSensor}
+                onSensorPositionUpdate={handleSensorPositionUpdate}
+                onSensorAdd={handleSensorAdd}
+                onModelPositionUpdate={handleModelPositionUpdate}
+                onSave={handleTwinSave}
               />
             </motion.div>
           )}
@@ -188,9 +359,13 @@ export const TwinMonitor = ({ digitalTwin, realTimeData, tenant }) => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <TwinControls 
+              {/* 🎯 ENHANCED CONTROLS INTEGRATION */}
+              <EnhancedTwinControls 
                 digitalTwin={digitalTwin}
                 realTimeData={realTimeData}
+                onParameterChange={handleParameterChange}
+                onOperationExecute={handleOperationExecute}
+                onControlModeChange={handleControlModeChange}
               />
             </motion.div>
           )}

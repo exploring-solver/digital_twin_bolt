@@ -1,4 +1,4 @@
-import { EnhancedDatabaseService } from './sensors/EnhancedDatabaseService.js';
+import { EnhancedDatabaseService } from './EnhancedDatabaseService.js';
 // import { SensorFactory } from './sensors/SensorFactory.js';
 
 export class DigitalTwinService {

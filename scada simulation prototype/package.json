@@ -18,14 +18,17 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "framer-motion": "^10.16.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.344.0",
     "modbus-serial": "^8.0.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.3",
     "recharts": "^2.15.4",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
     "three": "^0.160.0",
+    "uuid": "^11.1.0",
     "winston": "^3.11.0"
   },
   "devDependencies": {
