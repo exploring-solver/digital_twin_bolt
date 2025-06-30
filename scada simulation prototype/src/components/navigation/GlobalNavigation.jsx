@@ -82,6 +82,34 @@ export const GlobalNavigation = ({
 
   return (
     <>
+      {/* Glowing Bolt Logo at top right */}
+      <motion.div
+        className="fixed top-52 right-6 z-51"
+        initial={{ scale: 0.9, rotate: -10, opacity: 0.8 }}
+        animate={{ 
+          scale: [0.9, 1.1, 1], 
+          rotate: [0, 15, -15, 0], 
+          opacity: [0.8, 1, 0.8] 
+        }}
+        transition={{ 
+          duration: 3, 
+          repeat: Infinity, 
+          repeatType: "reverse", 
+          ease: "easeInOut" 
+        }}
+        whileHover={{ scale: 1.15, filter: "brightness(1.5) drop-shadow(0 0 24px #fbbf24)" }}
+        style={{ pointerEvents: 'auto' }}
+      >
+        <img
+          src="/boltlogo.jpg"
+          alt="Bolt Logo"
+          className="w-12 h-12 object-contain drop-shadow-lg"
+          style={{
+            filter: "drop-shadow(0 0 24px #fbbf24) brightness(1.2)"
+          }}
+        />
+      </motion.div>
+
       <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16">

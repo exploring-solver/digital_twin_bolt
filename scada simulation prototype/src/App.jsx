@@ -750,7 +750,7 @@ const AppContent = () => {
                 repeatDelay: 1,
               }}
             >
-              🚀
+              🙏
             </motion.span>
             <span className="text-sm font-bold">Made with Bolt!</span>
             <motion.span
@@ -802,7 +802,7 @@ const AppContent = () => {
           initial={{ opacity: 0, y: 10 }}
           whileHover={{ opacity: 1, y: 0 }}
         >
-          Built for Bolt Hackathon! 🎉
+          Built for Bolt Hackathon! by Team Cicada 3301🎉
           <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800" />
         </motion.div>
       </motion.div>
