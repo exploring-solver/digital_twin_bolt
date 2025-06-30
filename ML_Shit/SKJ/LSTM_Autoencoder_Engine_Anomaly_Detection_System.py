@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import LSTM, Dense, RepeatVector, TimeDistributed, Input
