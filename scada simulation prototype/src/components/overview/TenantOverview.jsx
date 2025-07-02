@@ -4,6 +4,10 @@ import { motion, useAnimation, useInView } from 'framer-motion';
 export const TenantOverview = ({ tenant, twins, onTwinSelect, onViewChange }) => {
   const [hoveredStat, setHoveredStat] = useState(null);
   const [particles, setParticles] = useState([]);
+  const [statsData, setStatsData] = useState({
+    activeTwins: 0,
+    activeAlerts: 0,
+  });
   const controls = useAnimation();
 
   // Generate floating particles
@@ -17,6 +21,20 @@ export const TenantOverview = ({ tenant, twins, onTwinSelect, onViewChange }) =>
     }));
     setParticles(newParticles);
   }, []);
+
+  // Calculate stats only once on mount or when twins change
+  useEffect(() => {
+    // Assign a status to each twin once
+    const twinStatuses = twins.map(() => Math.random() > 0.1 ? 'online' : 'offline');
+    const activeTwins = twinStatuses.filter(status => status === 'online').length;
+    const activeAlerts = Math.floor(Math.random() * 8);
+
+    setStatsData({
+      activeTwins,
+      activeAlerts,
+      twinStatuses, // Save if you want to use for rendering twins
+    });
+  }, [twins]);
 
   const getTwinIcon = (twinType) => {
     const icons = {
@@ -45,7 +63,7 @@ export const TenantOverview = ({ tenant, twins, onTwinSelect, onViewChange }) =>
     },
     {
       title: 'Active Twins',
-      value: twins.filter(() => getTwinStatus() === 'online').length,
+      value: statsData.activeTwins,
       icon: '✅',
       color: 'bg-green-500/20 text-green-400 border-green-500/30',
       gradient: 'from-green-500/20 to-emerald-500/20'
@@ -59,7 +77,7 @@ export const TenantOverview = ({ tenant, twins, onTwinSelect, onViewChange }) =>
     },
     {
       title: 'Active Alerts',
-      value: Math.floor(Math.random() * 8),
+      value: statsData.activeAlerts,
       icon: '⚠️',
       color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
       gradient: 'from-yellow-500/20 to-orange-500/20'

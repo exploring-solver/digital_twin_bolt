@@ -11,7 +11,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"]
   }
 });
@@ -122,7 +122,7 @@ const processRealTimeData = async () => {
       const sensorData = await generateTwinSensorData(twinId);
       
       // Process and validate data
-      const processedData = await sensorProcessor.processTwinSensorData(twinId, sensorData);
+      const processedData = await sensorProcessor.processSensorData(twinId, sensorData);
       
       // Store in database
       await databaseService.storeSensorData(twinId, processedData);
@@ -134,7 +134,7 @@ const processRealTimeData = async () => {
       });
       
       // Check for alerts
-      const alerts = sensorProcessor.checkTwinAlerts(twinId, processedData);
+      const alerts = sensorProcessor.checkAlerts(twinId, processedData);
       if (alerts.length > 0) {
         io.to(`twin_${twinId}`).emit('twin_alerts', {
           twinId,

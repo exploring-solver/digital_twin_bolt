@@ -121,7 +121,7 @@ export const GlobalNavigation = ({
               </div>
               {tenant && screenSize !== 'mobile' && (
                 <div className="text-xs sm:text-sm text-gray-400 truncate">
-                  {tenant.name}
+                  {/* {tenant.name} */}
                 </div>
               )}
             </div>
